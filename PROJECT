@@ -8,4 +8,14 @@ layout:
 - go.kubebuilder.io/v4
 projectName: managed-database-operator
 repo: github.com/jamaan01/managed-database-operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: example.com
+  group: demo
+  kind: ManagedDatabase
+  path: github.com/jamaan01/managed-database-operator/api/v1alpha1
+  version: v1alpha1
 version: "3"
