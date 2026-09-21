@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
 )
+
+var ErrUnavailable = errors.New("provisioner unavailable")
 
 type CreateRequest struct {
 	Name   string `json:"name"`
@@ -53,6 +56,10 @@ func (c *Client) Create(ctx context.Context, input CreateRequest) (Database, err
 		return Database{}, err
 	}
 	defer response.Body.Close()
+
+	if response.StatusCode == http.StatusServiceUnavailable {
+		return Database{}, ErrUnavailable
+	}
 
 	if response.StatusCode != http.StatusCreated {
 		return Database{}, fmt.Errorf("provisioner returned status %d", response.StatusCode)
